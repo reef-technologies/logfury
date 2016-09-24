@@ -1,0 +1,10 @@
+from .meta import AbstractTracePublicCallsMeta, DefaultTraceMeta, TraceAllPublicCallsMeta
+from .trace_call import trace_call
+from .tuning import limit_trace_arguments, disable_trace
+
+assert AbstractTracePublicCallsMeta
+assert DefaultTraceMeta
+assert TraceAllPublicCallsMeta
+assert disable_trace
+assert limit_trace_arguments
+assert trace_call

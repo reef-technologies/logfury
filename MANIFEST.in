@@ -1,0 +1,5 @@
+include README.rtf
+include requirements.txt
+include requirements-test.txt
+include requirements-setup.txt
+graft src
