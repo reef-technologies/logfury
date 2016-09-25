@@ -225,6 +225,7 @@ script:
   - if [ "$MODE" == 'SCA' ]; then grep -r '\_\_metaclass\_\_' . && exit 1 || true; else echo skip; fi  # bad metaclass declaration: use six
   - if [ "$MODE" == 'SCA' ]; then grep -P -r '^ *logger = (?!logging\.getLogger\(__name__\)$)' . | grep -v '.eggs/nose-' && exit 1 || true; else echo skip; fi  # bad logger definition: use `logger = logging.getLogger(__name__)`. See the magic logging metaclass.
   - if [ "$MODE" == 'SCA' ]; then python setup.py check -r -s; else echo skip; fi
+  - if [ "$MODE" == 'SCA' ]; then check-manifest -v; else echo skip; fi
 
   # package installation
   - |
