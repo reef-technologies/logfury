@@ -10,9 +10,9 @@ License
 
 BSD 3-clause
 
-*****************
+*****************************
 whats with the weird import
-*****************
+*****************************
 
 .. sourcecode:: pycon
 
@@ -49,9 +49,9 @@ Development version
 Basic usage
 *****************
 
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 DefaultTraceMeta metaclass
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. sourcecode:: pycon
 

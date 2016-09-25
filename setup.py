@@ -52,7 +52,7 @@ if __name__ == '__main__':
         with open(os.path.join(here, filename), 'rb', encoding='utf-8') as f:
             return f.read()
 
-    long_description = read_file_contents('README.rtf')
+    long_description = read_file_contents('README.rst')
     requirements_install = read_file_contents('requirements.txt').splitlines()
     if sys.version_info == (2, 6):
         requirements_install.append('ordereddict')
