@@ -14,7 +14,7 @@ BSD 3-clause
 whats with the weird import
 *****************************
 
-.. sourcecode:: pycon
+.. sourcecode:: python
 
     from logfury.v0_1 import DefaultTraceMeta
 
@@ -95,21 +95,21 @@ DefaultTraceMeta metaclass
     ...
     >>> a = Foo()
     >>> a.baz(1, 2, 3)
-	DEBUG:__main__:calling Foo.baz(self=<Foo object>, a=1, b=2, c=3)
+    DEBUG:__main__:calling Foo.baz(self=<Foo object>, a=1, b=2, c=3)
     >>> a.baz(4, b=8)
-	DEBUG:__main__:calling Foo.baz(self=<Foo object>, a=4, b=8)
+    DEBUG:__main__:calling Foo.baz(self=<Foo object>, a=4, b=8)
     >>> a.get_blah()  # nothing happens, since v0_1.DefaultTraceMeta does not trace "get_.*"
     >>> a._hello()  # nothing happens, since v0_1.DefaultTraceMeta does not trace "_.*"
     >>> a.world()  # nothing happens, since v0_1.DefaultTraceMeta does not trace "_.*"
     >>> b = Bar()
     >>> b.baz(4, b=8)  # tracing is inherited
-	DEBUG:__main__:calling Bar.baz(self=<Bar object>, a=4, b=8)
-	DEBUG:__main__:calling Foo.baz(self=<Bar object>, a=4, b=9, c=None)
+    DEBUG:__main__:calling Bar.baz(self=<Bar object>, a=4, b=8)
+    DEBUG:__main__:calling Foo.baz(self=<Bar object>, a=4, b=9, c=None)
     >>> b.world()  # nothing happens, since Foo.world() tracing was disabled and Bar inherited it
     >>> b.secret('correct horse battery staple', 'Hello world!')
-	DEBUG:__main__:calling Bar.secret(self=<Bar object>, other='Hello world!') (hidden args: password)
+    DEBUG:__main__:calling Bar.secret(self=<Bar object>, other='Hello world!') (hidden args: password)
     >>> b.secret2('correct horse battery staple', 'Hello world!')
-	DEBUG:__main__:calling Bar.secret2(other='Hello world!') (hidden args: self, password)
+    DEBUG:__main__:calling Bar.secret2(other='Hello world!') (hidden args: self, password)
 
 
 ^^^^^^^^^^^^^^^^^^^^
