@@ -1,9 +1,5 @@
 import inspect
 
-from collections import OrderedDict
-
-assert OrderedDict  # python2.6 does't have it. This is a placeholder for a solution.
-
 
 def get_class_that_defined_method(meth):
     if inspect.ismethod(meth):
@@ -15,10 +11,13 @@ def get_class_that_defined_method(meth):
         if not hasattr(meth, '__qualname__'):
             pass  # python too old
         else:
-            cls = getattr(
-                inspect.getmodule(meth),
-                meth.__qualname__.split('.<locals>', 1)[0].rsplit('.', 1)[0]
-            )  # yapf: disable
+            try:
+                cls = getattr(
+                    inspect.getmodule(meth),
+                    meth.__qualname__.split('.<locals>', 1)[0].rsplit('.', 1)[0]
+                )  # yapf: disable
+            except AttributeError:  # defined in an exec() on new python?
+                cls = 'exec'
             if isinstance(cls, type):
                 return cls
     return None

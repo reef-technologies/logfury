@@ -1,13 +1,17 @@
 from __future__ import print_function
 
 from functools import wraps
-import inspect
-import itertools
+
 import logging
 
 import six
 
-from .utils import get_class_that_defined_method, OrderedDict
+from .utils import get_class_that_defined_method
+
+try:
+    from inspect import signature
+except ImportError:
+    from funcsigs import signature
 
 
 class trace_call(object):
@@ -30,15 +34,15 @@ class trace_call(object):
 
     def __call__(self, function):
         @wraps(function)
-        def wrapper(*args, **kwargs):
+        def wrapper(*wrapee_args, **wrapee_kwargs):
             if self.logger.isEnabledFor(self.LEVEL):
-                #print(inspect.getargspec(function)[0])
-                args_names = OrderedDict.fromkeys(
-                    itertools.chain(inspect.getargspec(function)[0], six.iterkeys(kwargs))
-                )  # yapf: disable
-                args_dict = OrderedDict(
-                    itertools.chain(six.moves.zip(args_names, args), six.iteritems(kwargs))
-                )  # yapf: disable
+                sig = signature(function)
+                bound = sig.bind(*wrapee_args, **wrapee_kwargs)
+                for param in sig.parameters.values():
+                    if param.name not in bound.arguments:
+                        bound.arguments[param.name] = param.default
+
+                args_dict = bound.arguments
 
                 # filter arguments
                 output_arg_names = []
@@ -70,11 +74,6 @@ class trace_call(object):
                     suffix = ' (hidden args: %s)' % (', '.join(skipped_arg_names))
                 arguments = ', '.join('%s=%s' % (k, repr(args_dict[k])) for k in output_arg_names)
 
-                #if six.PY3 and len(args_dict) != 3:
-                #    #print([k for k in args_dict])
-                #    print(arguments, output_arg_names, args_dict, list(k for k in args_dict))
-                #    #assert False
-
                 function_name = function.__name__
                 klass = get_class_that_defined_method(function)
                 if klass is not None:
@@ -82,6 +81,6 @@ class trace_call(object):
 
                 # actually log the call
                 self.logger.log(self.LEVEL, 'calling %s(%s)%s', function_name, arguments, suffix)
-            return function(*args, **kwargs)
+            return function(*wrapee_args, **wrapee_kwargs)
 
         return wrapper

@@ -6,7 +6,7 @@ import sys
 ################################################################### yapf: disable
 
 NAME         = 'logfury'
-VERSION      = '0.1.0'
+VERSION      = '0.1.1'
 
 AUTHOR       = 'Pawel Polewicz'
 AUTHOR_EMAIL = 'p.polewicz@gmail.com'
@@ -32,6 +32,7 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.3',

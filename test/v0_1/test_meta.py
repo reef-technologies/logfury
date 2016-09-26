@@ -26,7 +26,7 @@ class TestTraceAllPublicCallsMeta(TestBase):
             a.bar(1, b=2)
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=3)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=None)' % (self._get_prefix(),)),
             )
 
         with LogCapture() as l:
@@ -36,7 +36,7 @@ class TestTraceAllPublicCallsMeta(TestBase):
 
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, a=1, b=2, c=3)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, a=1, b=2)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, a=1, b=2, c=None)' % (self._get_prefix(),)),
             )
 
     def test_disable_trace(self):
@@ -85,9 +85,9 @@ class TestTraceAllPublicCallsMeta(TestBase):
             b.bar(1, b=2)
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar() (hidden args: self, a, b, c)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar() (hidden args: self, a, b)' % (self._get_prefix(),)),
                 (__name__, 'DEBUG', 'calling %sbar() (hidden args: self, a, b, c)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar() (hidden args: self, a, b)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar() (hidden args: self, a, b, c)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar() (hidden args: self, a, b, c)' % (self._get_prefix(),)),
             )
 
     def test_skip(self):
@@ -113,9 +113,9 @@ class TestTraceAllPublicCallsMeta(TestBase):
             b.bar(1, b=2)
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, b=2, c=3) (hidden args: a)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, b=2) (hidden args: a)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, b=2, c=None) (hidden args: a)' % (self._get_prefix(),)),
                 (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, b=2, c=3) (hidden args: a)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, b=2) (hidden args: a)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, b=2, c=None) (hidden args: a)' % (self._get_prefix(),)),
             )
 
     def test_only(self):
@@ -142,9 +142,9 @@ class TestTraceAllPublicCallsMeta(TestBase):
             b.bar(1, b=2)
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar(a=1) (hidden args: self, b, c)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(a=1) (hidden args: self, b)' % (self._get_prefix(),)),
                 (__name__, 'DEBUG', 'calling %sbar(a=1) (hidden args: self, b, c)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(a=1) (hidden args: self, b)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(a=1) (hidden args: self, b, c)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(a=1) (hidden args: self, b, c)' % (self._get_prefix(),)),
             )
 
     def test_skip_and_only(self):
@@ -170,7 +170,7 @@ class TestTraceAllPublicCallsMeta(TestBase):
             b.bar(1, b=2)
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, b=2) (hidden args: a, c)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, b=2) (hidden args: a)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, b=2) (hidden args: a, c)' % (self._get_prefix(),)),
                 (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, b=2) (hidden args: a, c)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, b=2) (hidden args: a)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Bela object>, b=2) (hidden args: a, c)' % (self._get_prefix(),)),
             )

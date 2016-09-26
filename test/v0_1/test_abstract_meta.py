@@ -36,7 +36,7 @@ class TestTraceAllPublicCallsMeta(TestBase):
             a.bar(1, b=2)
             l.check(
                 (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=3)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=None)' % (self._get_prefix(),)),
             )
 
         class Bela(Supp):
