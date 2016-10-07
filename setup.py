@@ -6,7 +6,7 @@ import sys
 ################################################################### yapf: disable
 
 NAME         = 'logfury'
-VERSION      = '0.1.1'
+VERSION      = '0.1.2'
 
 AUTHOR       = 'Pawel Polewicz'
 AUTHOR_EMAIL = 'p.polewicz@gmail.com'

@@ -94,6 +94,10 @@ class TraceAllPublicCallsMeta(AbstractTraceMeta):
         return False
 
 
+class AbstractTracePublicCallsMeta(ABCMeta, TraceAllPublicCallsMeta):
+    pass
+
+
 class DefaultTraceMeta(TraceAllPublicCallsMeta):
     """
     traces all public method calls, except for ones with names that begin with 'get_'
@@ -108,5 +112,5 @@ class DefaultTraceMeta(TraceAllPublicCallsMeta):
         return False
 
 
-class AbstractTracePublicCallsMeta(ABCMeta, TraceAllPublicCallsMeta):
+class DefaultTraceAbstractMeta(ABCMeta, DefaultTraceMeta):
     pass
