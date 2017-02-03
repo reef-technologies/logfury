@@ -10,7 +10,7 @@ class AbstractTraceMeta(type):
     """
 
     @classmethod
-    def _filter_attribute(cls, attribute_name, attribute_value):
+    def _filter_attribute(mcs, attribute_name, attribute_value):
         """
         decides whether the given attribute should be excluded from tracing or not
         """
@@ -20,7 +20,7 @@ class AbstractTraceMeta(type):
             return True
         return False
 
-    def __new__(cls, name, bases, attrs, **kwargs):
+    def __new__(mcs, name, bases, attrs, **kwargs):
         # *magic*: an educated guess is made on how the module that the
         # processed class is created in would get its logger.
         # It is assumed that the popular convention recommended by the
@@ -31,7 +31,7 @@ class AbstractTraceMeta(type):
         for attribute_name in attrs:
             attribute_value = attrs[attribute_name]
 
-            if cls._filter_attribute(attribute_name, attribute_value):
+            if mcs._filter_attribute(attribute_name, attribute_value):
                 continue
             # attrs['__module__'] + '.' + attribute_name is worth logging
 
@@ -75,7 +75,7 @@ class AbstractTraceMeta(type):
             wrapped_value = wrapper(attribute_value)
             # and substitute the trace-wrapped method for the original
             attrs[attribute_name] = wrapped_value
-        return super(AbstractTraceMeta, cls).__new__(cls, name, bases, attrs)
+        return super(AbstractTraceMeta, mcs).__new__(mcs, name, bases, attrs)
 
 
 class TraceAllPublicCallsMeta(AbstractTraceMeta):
@@ -84,8 +84,8 @@ class TraceAllPublicCallsMeta(AbstractTraceMeta):
     """
 
     @classmethod
-    def _filter_attribute(cls, attribute_name, attribute_value):
-        if super(TraceAllPublicCallsMeta, cls)._filter_attribute(attribute_name, attribute_value):
+    def _filter_attribute(mcs, attribute_name, attribute_value):
+        if super(TraceAllPublicCallsMeta, mcs)._filter_attribute(attribute_name, attribute_value):
             return True
         elif not callable(attribute_value):
             return True  # it is a field
@@ -104,8 +104,8 @@ class DefaultTraceMeta(TraceAllPublicCallsMeta):
     """
 
     @classmethod
-    def _filter_attribute(cls, attribute_name, attribute_value):
-        if super(DefaultTraceMeta, cls)._filter_attribute(attribute_name, attribute_value):
+    def _filter_attribute(mcs, attribute_name, attribute_value):
+        if super(DefaultTraceMeta, mcs)._filter_attribute(attribute_name, attribute_value):
             return True
         elif attribute_name.startswith('get_'):
             return True
