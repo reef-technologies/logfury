@@ -1,14 +1,23 @@
+.. image:: https://img.shields.io/travis/ppolewicz/logfury/master.svg?label=Travisa%20CI
+    :target: http://travis-ci.org/ppolewicz/logfury
+.. image:: https://img.shields.io/appveyor/ci/ppolewicz/logfury/master.svg?label=Appveyor%20CI
+    :target: https://ci.appveyor.com/project/ppolewicz/logfury
+.. image:: https://img.shields.io/codacy/grade/7370168db8b045e6b450a14d2295ce94/master.svg
+    :target: https://www.codacy.com/app/p-polewicz/logfury/dashboard
+.. image:: https://img.shields.io/pypi/wheel/logfury.svg
+    :target: https://pypi.python.org/pypi/logfury/
+.. image:: https://img.shields.io/pypi/l/logfury.svg
+    :target: https://pypi.python.org/pypi/logfury/
+.. image:: https://img.shields.io/pypi/v/logfury.svg
+    :target: https://pypi.python.org/pypi/logfury/
+.. image:: https://img.shields.io/pypi/dm/logfury.svg
+    :target: https://pypi.python.org/pypi/logfury/
+
 ========
 Logfury
 ========
 
 Logfury is for python library maintainers. It allows for responsible, low-boilerplate logging of method calls.
-
-*****************
-License
-*****************
-
-BSD 3-clause
 
 *****************************
 whats with the weird import
