@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from inspect import isclass
 import logging
 
 from .trace_call import trace_call
@@ -71,10 +72,29 @@ class AbstractTraceMeta(type):
                 only=only,
                 skip=skip,
             )
+
+            original_wrapper = None
+            # Special case for staticmethod/classmethod
+            if isinstance(attribute_value, staticmethod):
+                attribute_value = attribute_value.__func__
+                original_wrapper = staticmethod
+            elif isinstance(attribute_value, classmethod):
+                attribute_value = attribute_value.__func__
+                original_wrapper = classmethod
+
             # wrap the callable in it
             wrapped_value = wrapper(attribute_value)
-            # and substitute the trace-wrapped method for the original
-            attrs[attribute_name] = wrapped_value
+
+            if isclass(attribute_value):  # must be a class
+                # override the original __init__
+                attribute_value.__init__ = wrapped_value
+            else:  # must be a method
+                # apply the original wrapper if provided
+                if original_wrapper is not None:
+                    wrapped_value = original_wrapper(wrapped_value)
+                # substitute the trace-wrapped method for the original
+                attrs[attribute_name] = wrapped_value
+
         return super(AbstractTraceMeta, mcs).__new__(mcs, name, bases, attrs)
 
 
@@ -88,9 +108,13 @@ class TraceAllPublicCallsMeta(AbstractTraceMeta):
         if super(TraceAllPublicCallsMeta, mcs)._filter_attribute(attribute_name, attribute_value):
             return True
         elif not callable(attribute_value):
-            return True  # it is a field
+            # Special case for staticmethod/classmethod as prior to Python 3.10
+            # staticmethod/classmethod are not callable
+            if not isinstance(attribute_value, (classmethod, staticmethod)):
+                return True  # it is a field
         elif attribute_name.startswith('_'):
             return True  # it is a _protected or a __private method (or __magic__)
+
         return False
 
 

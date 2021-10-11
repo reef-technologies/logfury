@@ -164,3 +164,76 @@ class TestTraceAllPublicCallsMeta:
                 (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, b=2) (hidden args: a, c)' % (self.__class__.__name__,)),
                 (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, b=2) (hidden args: a, c)' % (self.__class__.__name__,)),
             )
+
+    def test_class(self):
+        class Ala(metaclass=TraceAllPublicCallsMeta):
+            class Bela:
+                def __init__(self, a, b, c=None):
+                    pass
+
+                def __repr__(self):
+                    return '<%s object>' % (self.__class__.__name__,)
+
+            def __repr__(self):
+                return '<%s object>' % (self.__class__.__name__,)
+
+        with LogCapture() as l:
+            a = Ala()
+            a.Bela(1, 2, 3)
+            Ala.Bela(1, 2, 3)
+            l.check(
+                (__name__, 'DEBUG', 'calling %s.__init__(self=<Bela object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling %s.__init__(self=<Bela object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
+            )
+
+    def test_classmethod(self):
+        class MetaAla(TraceAllPublicCallsMeta):
+            def __repr__(self):
+                return '<%s object>' % (self.__class__.__name__,)
+
+        class Ala(metaclass=MetaAla):
+            @classmethod
+            def bar(cls, a, b, c=None):
+                return True
+
+            def __repr__(self):
+                return '<%s object>' % (self.__class__.__name__,)
+
+        with LogCapture() as l:
+            a = Ala()
+            a.bar(1, 2, 3)
+            l.check((__name__, 'DEBUG', 'calling %s.bar(cls=<MetaAla object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),)
+
+    def test_staticmethod(self):
+        def ala(a, b, c=None):
+            pass
+
+        class Ala:
+            def __init__(self, a, b, c=None):
+                pass
+
+            def __repr__(self):
+                return '<%s object>' % (self.__class__.__name__,)
+
+        class Bela(metaclass=TraceAllPublicCallsMeta):
+
+            foo = staticmethod(ala)
+            Foo = staticmethod(Ala)
+
+            @staticmethod
+            def bar(a, b, c=None):
+                return True
+
+            def __repr__(self):
+                return '<%s object>' % (self.__class__.__name__,)
+
+        with LogCapture() as l:
+            b = Bela()
+            b.foo(1, 2, 3)
+            b.Foo(1, 2, 3)
+            b.bar(1, 2, 3)
+            l.check(
+                (__name__, 'DEBUG', 'calling %s.ala(a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling %s.__init__(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling %s.bar(a=1, b=2, c=3)' % (self.__class__.__name__,)),
+            )
