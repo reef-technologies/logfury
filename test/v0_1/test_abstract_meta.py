@@ -1,17 +1,14 @@
 from abc import abstractmethod
 
-import six
+import pytest
 from testfixtures import LogCapture
 
 from logfury.v0_1 import AbstractTracePublicCallsMeta, DefaultTraceAbstractMeta
 
-from .test_base import TestBase
 
-
-class TestTraceAllPublicCallsMeta(TestBase):
+class TestTraceAllPublicCallsMeta:
     def test_subclass(self):
-        @six.add_metaclass(AbstractTracePublicCallsMeta)
-        class Supp(object):
+        class Supp(metaclass=AbstractTracePublicCallsMeta):
             @abstractmethod
             def a(self):
                 pass
@@ -35,8 +32,8 @@ class TestTraceAllPublicCallsMeta(TestBase):
             a.bar(1, 2, 3)
             a.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=3)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=None)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=None)' % (self.__class__.__name__,)),
             )
 
         class Bela(Supp):
@@ -44,14 +41,13 @@ class TestTraceAllPublicCallsMeta(TestBase):
             def bar(self, a, b, c=None):
                 return True
 
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             Bela()
 
 
 class TestDefaultTraceAbstractMeta(TestTraceAllPublicCallsMeta):
     def test_subclass(self):
-        @six.add_metaclass(DefaultTraceAbstractMeta)
-        class Supp(object):
+        class Supp(metaclass=DefaultTraceAbstractMeta):
             @abstractmethod
             def a(self):
                 pass
@@ -75,8 +71,8 @@ class TestDefaultTraceAbstractMeta(TestTraceAllPublicCallsMeta):
             a.bar(1, 2, 3)
             a.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=3)' % (self._get_prefix(),)),
-                (__name__, 'DEBUG', 'calling %sbar(self=<Ala object>, a=1, b=2, c=None)' % (self._get_prefix(),)),
+                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=None)' % (self.__class__.__name__,)),
             )
 
         class Bela(Supp):
@@ -84,5 +80,5 @@ class TestDefaultTraceAbstractMeta(TestTraceAllPublicCallsMeta):
             def bar(self, a, b, c=None):
                 return True
 
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             Bela()
