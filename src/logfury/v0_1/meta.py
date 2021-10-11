@@ -1,4 +1,5 @@
 from abc import ABCMeta
+from inspect import isclass
 import logging
 
 from .trace_call import trace_call
@@ -71,10 +72,45 @@ class AbstractTraceMeta(type):
                 only=only,
                 skip=skip,
             )
-            # wrap the callable in it
-            wrapped_value = wrapper(attribute_value)
-            # and substitute the trace-wrapped method for the original
-            attrs[attribute_name] = wrapped_value
+
+            if hasattr(attribute_value, '__wrapped__') and isinstance(attribute_value, staticmethod):
+                # Python 3.10 compatible
+                attribute_value = attribute_value.__wrapped__
+                if isclass(attribute_value):  # must be a class
+                    # wrap the __init__ and not the entire class
+                    wrapped_value = wrapper(attribute_value.__init__)
+                    # and override the original __init__
+                    attribute_value.__init__ = wrapped_value
+                else:  # must be a method
+                    # wrap the callable in it
+                    wrapped_value = wrapper(attribute_value)
+                    # and substitute the trace-wrapped method for the original
+                    attrs[attribute_name] = staticmethod(wrapped_value)
+            elif hasattr(attribute_value, '__wrapped__') and isinstance(attribute_value, classmethod):
+                # Python 3.10 compatible
+                attribute_value = attribute_value.__wrapped__
+                if isclass(attribute_value):  # must be a class
+                    # wrap the __init__ and not the entire class
+                    wrapped_value = wrapper(attribute_value.__init__)
+                    # and override the original __init__
+                    attribute_value.__init__ = wrapped_value
+                else:  # must be a method
+                    # wrap the callable in it
+                    wrapped_value = wrapper(attribute_value)
+                    # and substitute the trace-wrapped method for the original
+                    attrs[attribute_name] = classmethod(wrapped_value)
+            else:
+                if isclass(attribute_value):  # must be a class
+                    # wrap the __init__ and not the entire class
+                    wrapped_value = wrapper(attribute_value.__init__)
+                    # and override the original __init__
+                    attribute_value.__init__ = wrapped_value
+                else:  # must be a method
+                    # wrap the callable in it
+                    wrapped_value = wrapper(attribute_value)
+                    # and substitute the trace-wrapped method for the original
+                    attrs[attribute_name] = wrapped_value
+
         return super(AbstractTraceMeta, mcs).__new__(mcs, name, bases, attrs)
 
 
