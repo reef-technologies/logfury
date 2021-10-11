@@ -1,7 +1,5 @@
 import logging
-from inspect import signature
 
-import pytest
 from testfixtures import LogCapture
 
 from logfury.v0_1 import trace_call
@@ -36,9 +34,7 @@ class TestTraceCall:
             foo('a', 'b', *['c', 'd'], e='E', f='F', Z='Z', **{'g': 'g', 'h': 'h'})
             l.check(
                 (
-                    logger_name,
-                    'DEBUG',
-                    "calling %s.foo(a='a', b='b', c='c', d='d', e='E', f='F', "
+                    logger_name, 'DEBUG', "calling %s.foo(a='a', b='b', c='c', d='d', e='E', f='F', "
                     "g='g', h='h', varkwargs_={'Z': 'Z'}, varargs_=<class 'inspect._empty'>, "
                     "i='ii', j='jj')" % (self.__class__.__name__,)
                 ),
