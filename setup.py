@@ -46,51 +46,38 @@ CLASSIFIERS = [
 
 ################################################################### yapf: enable
 
-if __name__ == '__main__':
-    here = os.path.abspath(os.path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
-    def read_file_contents(filename):
-        with open(os.path.join(here, filename), 'rb', encoding='utf-8') as f:
-            return f.read()
 
-    long_description = read_file_contents('README.rst')
-    requirements_install = read_file_contents('requirements.txt').splitlines()
-    if sys.version_info == (2, 6):
-        requirements_install.append('ordereddict')
-    requirements_test = read_file_contents('requirements-test.txt').splitlines()
+def read_file_contents(filename):
+    with open(os.path.join(here, filename), 'rb', encoding='utf-8') as f:
+        return f.read()
 
-    setup(
-        name             = NAME,
-        version          = VERSION,
-        url              = URL,
-        download_url     = DOWNLOAD_URL_TEMPLATE % (VERSION,),
 
-        author           = AUTHOR,
-        author_email     = AUTHOR_EMAIL,
-        maintainer       = AUTHOR,
-        maintainer_email = AUTHOR_EMAIL,
+long_description = read_file_contents('README.rst')
+requirements_install = read_file_contents('requirements.txt').splitlines()
+if sys.version_info == (2, 6):
+    requirements_install.append('ordereddict')
 
-        packages         = find_packages(where='src'),
-        license          = LICENSE,
+setup(
+    name             = NAME,
+    version          = VERSION,
+    url              = URL,
+    download_url     = DOWNLOAD_URL_TEMPLATE % (VERSION,),
 
-        description      = DESCRIPTION,
-        long_description = long_description,
-        keywords         = KEYWORDS,
+    author           = AUTHOR,
+    author_email     = AUTHOR_EMAIL,
+    maintainer       = AUTHOR,
+    maintainer_email = AUTHOR_EMAIL,
 
-        package_dir      = {'': 'src'},
-        zip_safe         = False,
-        classifiers      = CLASSIFIERS,
-        install_requires = requirements_install,
-        tests_require    = requirements_test,
-        package_data     = {
-            NAME: [
-                'requirements.txt',
-                'requirements-test.txt',
-            ]
-        },
+    packages         = find_packages(exclude=['test*']),
+    license          = LICENSE,
 
-        # to install: pip install -e .[dev,test]
-        extras_require   = {
-            'test': requirements_test,
-        },
-    )  # yapf: disable
+    description      = DESCRIPTION,
+    long_description = long_description,
+    keywords         = KEYWORDS,
+
+    classifiers      = CLASSIFIERS,
+    install_requires = requirements_install,
+    package_data     = {NAME: ['requirements.txt', 'LICENSE']},
+)  # yapf: disable

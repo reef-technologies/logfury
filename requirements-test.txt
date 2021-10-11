@@ -1,4 +1,0 @@
-pyflakes
-readme_renderer
-testfixtures
-yapf
