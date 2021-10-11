@@ -1,7 +1,6 @@
 from codecs import open
 import os.path
 from setuptools import setup, find_packages
-import sys
 
 ################################################################### yapf: disable
 
@@ -31,12 +30,7 @@ CLASSIFIERS = [
 
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.6',
-    'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.3',
-    'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: Implementation :: CPython',
@@ -54,11 +48,6 @@ def read_file_contents(filename):
         return f.read()
 
 
-long_description = read_file_contents('README.rst')
-requirements_install = read_file_contents('requirements.txt').splitlines()
-if sys.version_info == (2, 6):
-    requirements_install.append('ordereddict')
-
 setup(
     name             = NAME,
     version          = VERSION,
@@ -74,10 +63,9 @@ setup(
     license          = LICENSE,
 
     description      = DESCRIPTION,
-    long_description = long_description,
+    long_description = read_file_contents('README.rst'),
     keywords         = KEYWORDS,
 
     classifiers      = CLASSIFIERS,
-    install_requires = requirements_install,
     package_data     = {NAME: ['requirements.txt', 'LICENSE']},
 )  # yapf: disable
