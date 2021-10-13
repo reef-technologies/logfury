@@ -1,5 +1,0 @@
-check-manifest
-pyflakes
-readme_renderer
-testfixtures
-yapf

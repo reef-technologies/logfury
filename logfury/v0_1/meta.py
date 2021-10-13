@@ -35,7 +35,7 @@ class AbstractTraceMeta(type):
                 continue
             # attrs['__module__'] + '.' + attribute_name is worth logging
 
-            #assert callable(attribute_value), 'tracing non-methods is not implemented %s %s' % (attribute_name, attribute_value)
+            # assert callable(attribute_value), 'tracing non-methods is not implemented %s %s' % (attribute_name, attribute_value)
 
             # collect the `only` and `skip` sets from mro
             only = getattr(attribute_value, '_trace_only', None)

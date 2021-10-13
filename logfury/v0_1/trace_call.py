@@ -1,17 +1,10 @@
-from __future__ import print_function
-
 from functools import wraps
 
 import logging
 
-import six
+from inspect import signature
 
 from .utils import get_class_that_defined_method
-
-try:
-    from inspect import signature
-except ImportError:
-    from funcsigs import signature
 
 
 class trace_call(object):
@@ -48,19 +41,19 @@ class trace_call(object):
                 output_arg_names = []
                 skipped_arg_names = []
                 if self.skip is not None and self.only is not None:
-                    for arg in six.iterkeys(args_dict):
+                    for arg in args_dict.keys():
                         if arg in self.only and arg not in self.skip:
                             output_arg_names.append(arg)
                         else:
                             skipped_arg_names.append(arg)
                 elif self.only is not None:
-                    for arg in six.iterkeys(args_dict):
+                    for arg in args_dict.keys():
                         if arg in self.only:
                             output_arg_names.append(arg)
                         else:
                             skipped_arg_names.append(arg)
                 elif self.skip is not None:
-                    for arg in six.iterkeys(args_dict):
+                    for arg in args_dict.keys():
                         if arg in self.skip:
                             skipped_arg_names.append(arg)
                         else:

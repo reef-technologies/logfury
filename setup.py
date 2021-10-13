@@ -1,7 +1,9 @@
-from codecs import open
+# noqa
+
 import os.path
-from setuptools import setup, find_packages
-import sys
+from codecs import open
+
+from setuptools import find_packages, setup
 
 ################################################################### yapf: disable
 
@@ -31,14 +33,12 @@ CLASSIFIERS = [
 
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.6',
-    'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.3',
-    'Programming Language :: Python :: 3.4',
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: Implementation :: Jython',
     'Programming Language :: Python :: Implementation :: PyPy',
@@ -46,51 +46,32 @@ CLASSIFIERS = [
 
 ################################################################### yapf: enable
 
-if __name__ == '__main__':
-    here = os.path.abspath(os.path.dirname(__file__))
+here = os.path.abspath(os.path.dirname(__file__))
 
-    def read_file_contents(filename):
-        with open(os.path.join(here, filename), 'rb', encoding='utf-8') as f:
-            return f.read()
 
-    long_description = read_file_contents('README.rst')
-    requirements_install = read_file_contents('requirements.txt').splitlines()
-    if sys.version_info == (2, 6):
-        requirements_install.append('ordereddict')
-    requirements_test = read_file_contents('requirements-test.txt').splitlines()
+def read_file_contents(filename):
+    with open(os.path.join(here, filename), 'rb', encoding='utf-8') as f:
+        return f.read()
 
-    setup(
-        name             = NAME,
-        version          = VERSION,
-        url              = URL,
-        download_url     = DOWNLOAD_URL_TEMPLATE % (VERSION,),
 
-        author           = AUTHOR,
-        author_email     = AUTHOR_EMAIL,
-        maintainer       = AUTHOR,
-        maintainer_email = AUTHOR_EMAIL,
+setup(
+    name             = NAME,
+    version          = VERSION,
+    url              = URL,
+    download_url     = DOWNLOAD_URL_TEMPLATE % (VERSION,),
 
-        packages         = find_packages(where='src'),
-        license          = LICENSE,
+    author           = AUTHOR,
+    author_email     = AUTHOR_EMAIL,
+    maintainer       = AUTHOR,
+    maintainer_email = AUTHOR_EMAIL,
 
-        description      = DESCRIPTION,
-        long_description = long_description,
-        keywords         = KEYWORDS,
+    packages         = find_packages(exclude=['test*']),
+    license          = LICENSE,
 
-        package_dir      = {'': 'src'},
-        zip_safe         = False,
-        classifiers      = CLASSIFIERS,
-        install_requires = requirements_install,
-        tests_require    = requirements_test,
-        package_data     = {
-            NAME: [
-                'requirements.txt',
-                'requirements-test.txt',
-            ]
-        },
+    description      = DESCRIPTION,
+    long_description = read_file_contents('README.rst'),
+    keywords         = KEYWORDS,
 
-        # to install: pip install -e .[dev,test]
-        extras_require   = {
-            'test': requirements_test,
-        },
-    )  # yapf: disable
+    classifiers      = CLASSIFIERS,
+    package_data     = {NAME: ['requirements.txt', 'LICENSE']},
+)  # yapf: disable

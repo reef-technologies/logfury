@@ -1,9 +1,3 @@
-.. image:: https://img.shields.io/travis/ppolewicz/logfury/master.svg?label=Travisa%20CI
-    :target: http://travis-ci.org/ppolewicz/logfury
-.. image:: https://img.shields.io/appveyor/ci/ppolewicz/logfury/master.svg?label=Appveyor%20CI
-    :target: https://ci.appveyor.com/project/ppolewicz/logfury
-.. image:: https://img.shields.io/codacy/grade/7370168db8b045e6b450a14d2295ce94/master.svg
-    :target: https://www.codacy.com/app/p-polewicz/logfury/dashboard
 .. image:: https://img.shields.io/pypi/wheel/logfury.svg
     :target: https://pypi.python.org/pypi/logfury/
 .. image:: https://img.shields.io/pypi/l/logfury.svg
