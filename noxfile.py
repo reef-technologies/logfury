@@ -99,8 +99,5 @@ def build(session):
         asset_path = glob('dist/*')[0]
         print('::set-output name=asset_path::', asset_path, sep='')
 
-        asset_name = os.path.basename(asset_path)
-        print('::set-output name=asset_name::', asset_name, sep='')
-
         version = os.environ['GITHUB_REF'].replace('refs/tags/v', '')
         print('::set-output name=version::', version, sep='')

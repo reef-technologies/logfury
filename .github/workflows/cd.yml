@@ -1,34 +1,39 @@
-# This is a basic workflow to help you get started with Actions
+name: Continuous Delivery
 
-name: CD
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     tags: 'v*'  # push events to matching v*, i.e. v1.0, v20.15.10
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+env:
+  PYTHON_DEFAULT_VERSION: "3.10"
+  PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  deploy:
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+        with:
+          fetch-depth: 0
+      - name: Set up Python ${{ env.PYTHON_DEFAULT_VERSION }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_DEFAULT_VERSION }}
+      - name: Install dependencies
+        run: python -m pip install --upgrade nox pip setuptools wheel
+      - name: Build the distribution
+        id: build
+        run: nox -vs build
+      - name: Create GitHub release and upload the distribution
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.build.outputs.version }}
+          draft: ${{ env.ACTIONS_STEP_DEBUG == 'true' }}
+          prerelease: false
+          files: ${{ steps.build.outputs.asset_path }}
+      - name: Upload the distribution to PyPI
+        if: ${{ env.PYPI_PASSWORD != '' }}
+        uses: pypa/gh-action-pypi-publish@v1.3.1
+        with:
+          user: __token__
+          password: ${{ env.PYPI_PASSWORD }}
