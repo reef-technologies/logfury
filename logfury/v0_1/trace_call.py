@@ -2,7 +2,7 @@ from functools import wraps
 
 import logging
 
-from inspect import signature
+from inspect import isclass, signature
 
 from .utils import get_class_that_defined_method
 
@@ -26,6 +26,9 @@ class trace_call(object):
         self.skip = skip
 
     def __call__(self, function):
+        if isclass(function):
+            function = function.__init__
+
         @wraps(function)
         def wrapper(*wrapee_args, **wrapee_kwargs):
             if self.logger.isEnabledFor(self.LEVEL):

@@ -39,3 +39,51 @@ class TestTraceCall:
                     "i='ii', j='jj')" % (self.__class__.__name__,)
                 ),
             )
+
+    def test_class(self):
+        with LogCapture() as l:
+
+            @trace_call(logger)
+            class Ala:
+                def __init__(a, b, c=None):
+                    pass
+
+            Ala(1, 2, 3)
+            l.check((logger_name, 'DEBUG', 'calling %s.__init__(a=1, b=2, c=3)' % (self.__class__.__name__,)),)
+
+    def test_classmethod(self):
+        with LogCapture() as l:
+
+            class MetaAla(type):
+                def __repr__(self):
+                    return '<%s object>' % (self.__class__.__name__,)
+
+            class Ala(metaclass=MetaAla):
+                @classmethod
+                @trace_call(logger)
+                def bar(cls, a, b, c=None):
+                    return True
+
+                def __repr__(self):
+                    return '<%s object>' % (self.__class__.__name__,)
+
+            a = Ala()
+            a.bar(1, 2, 3)
+            l.check((logger_name, 'DEBUG', 'calling %s.bar(cls=<MetaAla object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),)
+
+    def test_staticmethod(self):
+        with LogCapture() as l:
+
+            class Bela:
+                @staticmethod
+                @trace_call(logger)
+                def bar(a, b, c=None):
+                    return True
+
+                def __repr__(self):
+                    return '<%s object>' % (self.__class__.__name__,)
+
+        with LogCapture() as l:
+            b = Bela()
+            b.bar(1, 2, 3)
+            l.check((logger_name, 'DEBUG', 'calling %s.bar(a=1, b=2, c=3)' % (self.__class__.__name__,)),)
