@@ -44,8 +44,8 @@ Development version
 
 ::
 
-    git clone git@github.com:ppolewicz/logfury.git
-    python setup.py install
+    git clone git@github.com:reef-technologies/logfury.git
+    pip install -e .
 
 
 *****************
