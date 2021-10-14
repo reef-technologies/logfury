@@ -6,6 +6,7 @@ on:
 
 env:
   PYTHON_DEFAULT_VERSION: "3.10"
+  ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
   PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
 jobs:
@@ -28,6 +29,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.build.outputs.version }}
+          body: "Release ${{ steps.build.outputs.version }}"
           draft: ${{ env.ACTIONS_STEP_DEBUG == 'true' }}
           prerelease: false
           files: ${{ steps.build.outputs.asset_path }}
