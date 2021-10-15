@@ -8,7 +8,6 @@ from setuptools import find_packages, setup
 ################################################################### yapf: disable
 
 NAME         = 'logfury'
-VERSION      = '0.1.2'
 
 AUTHOR       = 'Pawel Polewicz'
 AUTHOR_EMAIL = 'p.polewicz@gmail.com'
@@ -16,9 +15,8 @@ AUTHOR_EMAIL = 'p.polewicz@gmail.com'
 DESCRIPTION  = 'Toolkit for responsible, low-boilerplate logging of library method calls',
 LICENSE      = 'BSD'
 KEYWORDS     = ['logging', 'tracing']
-URL          = 'https://github.com/ppolewicz/logfury'
-
-DOWNLOAD_URL_TEMPLATE = URL + '/tarball/%s'
+URL          = 'https://github.com/reef-technologies/logfury'
+DOWNLOAD_URL = URL + '/releases'
 
 CLASSIFIERS = [
     'Development Status :: 4 - Beta',
@@ -39,6 +37,7 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: Implementation :: CPython',
     'Programming Language :: Python :: Implementation :: Jython',
     'Programming Language :: Python :: Implementation :: PyPy',
@@ -56,9 +55,8 @@ def read_file_contents(filename):
 
 setup(
     name             = NAME,
-    version          = VERSION,
     url              = URL,
-    download_url     = DOWNLOAD_URL_TEMPLATE % (VERSION,),
+    download_url     = DOWNLOAD_URL,
 
     author           = AUTHOR,
     author_email     = AUTHOR_EMAIL,
@@ -74,4 +72,7 @@ setup(
 
     classifiers      = CLASSIFIERS,
     package_data     = {NAME: ['requirements.txt', 'LICENSE']},
+
+    setup_requires=['setuptools_scm<6.0'],  # setuptools_scm>=6.0 doesn't support Python 3.5
+    use_scm_version=True,
 )  # yapf: disable
