@@ -4,8 +4,6 @@ import logging
 
 from inspect import isclass, signature
 
-from .utils import get_class_that_defined_method
-
 
 class trace_call(object):
     """
@@ -67,13 +65,10 @@ class trace_call(object):
                 # format output
                 suffix = ''
                 if skipped_arg_names:
-                    suffix = ' (hidden args: %s)' % (', '.join(skipped_arg_names))
-                arguments = ', '.join('%s=%s' % (k, repr(args_dict[k])) for k in output_arg_names)
+                    suffix = ' (hidden args: {})'.format(', '.join(skipped_arg_names))
+                arguments = ', '.join('{}={}'.format(k, repr(args_dict[k])) for k in output_arg_names)
 
-                function_name = function.__name__
-                klass = get_class_that_defined_method(function)
-                if klass is not None:
-                    function_name = '%s.%s' % (klass.__name__, function_name)
+                function_name = getattr(function, '__qualname__', function.__name__)
 
                 # actually log the call
                 self.logger.log(self.LEVEL, 'calling %s(%s)%s', function_name, arguments, suffix)

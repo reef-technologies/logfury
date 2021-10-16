@@ -45,7 +45,7 @@ def install_myself(session, extras=None):
     """Install from the source."""
     arg = '.'
     if extras:
-        arg += '[%s]' % ','.join(extras)
+        arg += '[{}]'.format(','.join(extras))
 
     session.install('-e', arg)
 

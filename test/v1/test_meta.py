@@ -1,6 +1,6 @@
 from testfixtures import LogCapture
 
-from logfury.v0_1 import TraceAllPublicCallsMeta, limit_trace_arguments, disable_trace
+from logfury.v1 import TraceAllPublicCallsMeta, limit_trace_arguments, disable_trace
 
 
 class TestTraceAllPublicCallsMeta:
@@ -10,7 +10,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(Ala):
             def bar(self, a, b, c=None):
@@ -21,8 +21,8 @@ class TestTraceAllPublicCallsMeta:
             a.bar(1, 2, 3)
             a.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=None)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, a=1, b=2, c=3)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, a=1, b=2, c=None)'.format(a.bar.__qualname__)),
             )
 
         with LogCapture() as l:
@@ -31,8 +31,8 @@ class TestTraceAllPublicCallsMeta:
             b.bar(1, b=2)
 
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, a=1, b=2, c=None)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(self=<Bela object>, a=1, b=2, c=3)'.format(b.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Bela object>, a=1, b=2, c=None)'.format(b.bar.__qualname__)),
             )
 
     def test_disable_trace(self):
@@ -42,7 +42,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(Ala):
             def bar(self, a, b, c=None):
@@ -64,7 +64,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(Ala):
             def bar(self, a, b, c=None):
@@ -78,10 +78,10 @@ class TestTraceAllPublicCallsMeta:
             b.bar(1, 2, 3)
             b.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar() (hidden args: self, a, b, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar() (hidden args: self, a, b, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar() (hidden args: self, a, b, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar() (hidden args: self, a, b, c)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}() (hidden args: self, a, b, c)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}() (hidden args: self, a, b, c)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}() (hidden args: self, a, b, c)'.format(b.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}() (hidden args: self, a, b, c)'.format(b.bar.__qualname__)),
             )
 
     def test_skip(self):
@@ -91,7 +91,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(Ala):
             def bar(self, a, b, c=None):
@@ -105,10 +105,10 @@ class TestTraceAllPublicCallsMeta:
             b.bar(1, 2, 3)
             b.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, b=2, c=3) (hidden args: a)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, b=2, c=None) (hidden args: a)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, b=2, c=3) (hidden args: a)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, b=2, c=None) (hidden args: a)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, b=2, c=3) (hidden args: a)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, b=2, c=None) (hidden args: a)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Bela object>, b=2, c=3) (hidden args: a)'.format(b.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Bela object>, b=2, c=None) (hidden args: a)'.format(b.bar.__qualname__)),
             )
 
     def test_only(self):
@@ -118,7 +118,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(Ala):
             def bar(self, a, b, c=None):
@@ -132,10 +132,10 @@ class TestTraceAllPublicCallsMeta:
             b.bar(1, 2, 3)
             b.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(a=1) (hidden args: self, b, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(a=1) (hidden args: self, b, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(a=1) (hidden args: self, b, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(a=1) (hidden args: self, b, c)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(a=1) (hidden args: self, b, c)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1) (hidden args: self, b, c)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1) (hidden args: self, b, c)'.format(b.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1) (hidden args: self, b, c)'.format(b.bar.__qualname__)),
             )
 
     def test_skip_and_only(self):
@@ -145,7 +145,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(Ala):
             def bar(self, a, b, c=None):
@@ -159,10 +159,10 @@ class TestTraceAllPublicCallsMeta:
             b.bar(1, 2, 3)
             b.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, b=2) (hidden args: a, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, b=2) (hidden args: a, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, b=2) (hidden args: a, c)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Bela object>, b=2) (hidden args: a, c)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, b=2) (hidden args: a, c)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, b=2) (hidden args: a, c)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Bela object>, b=2) (hidden args: a, c)'.format(b.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Bela object>, b=2) (hidden args: a, c)'.format(b.bar.__qualname__)),
             )
 
     def test_class(self):
@@ -172,24 +172,24 @@ class TestTraceAllPublicCallsMeta:
                     pass
 
                 def __repr__(self):
-                    return '<%s object>' % (self.__class__.__name__,)
+                    return '<{} object>'.format(self.__class__.__name__,)
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         with LogCapture() as l:
             a = Ala()
             a.Bela(1, 2, 3)
             Ala.Bela(1, 2, 3)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.__init__(self=<Bela object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.__init__(self=<Bela object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}.__init__(self=<Bela object>, a=1, b=2, c=3)'.format(a.Bela.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}.__init__(self=<Bela object>, a=1, b=2, c=3)'.format(Ala.Bela.__qualname__)),
             )
 
     def test_classmethod(self):
         class MetaAla(TraceAllPublicCallsMeta):
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Ala(metaclass=MetaAla):
             @classmethod
@@ -197,12 +197,12 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         with LogCapture() as l:
             a = Ala()
             a.bar(1, 2, 3)
-            l.check((__name__, 'DEBUG', 'calling %s.bar(cls=<MetaAla object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),)
+            l.check((__name__, 'DEBUG', 'calling {}(cls=<MetaAla object>, a=1, b=2, c=3)'.format(a.bar.__qualname__)),)
 
     def test_staticmethod(self):
         def ala(a, b, c=None):
@@ -213,7 +213,7 @@ class TestTraceAllPublicCallsMeta:
                 pass
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Bela(metaclass=TraceAllPublicCallsMeta):
 
@@ -225,7 +225,7 @@ class TestTraceAllPublicCallsMeta:
                 return True
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         with LogCapture() as l:
             b = Bela()
@@ -233,7 +233,7 @@ class TestTraceAllPublicCallsMeta:
             b.Foo(1, 2, 3)
             b.bar(1, 2, 3)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.ala(a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.__init__(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(a=1, b=2, c=3)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(ala.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}.__init__(self=<Ala object>, a=1, b=2, c=3)'.format(b.Foo.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(b.bar.__qualname__)),
             )
