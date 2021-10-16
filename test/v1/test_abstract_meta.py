@@ -3,7 +3,7 @@ from abc import abstractmethod
 import pytest
 from testfixtures import LogCapture
 
-from logfury.v0_1 import AbstractTracePublicCallsMeta, DefaultTraceAbstractMeta
+from logfury.v1 import AbstractTracePublicCallsMeta, DefaultTraceAbstractMeta
 
 
 class TestTraceAllPublicCallsMeta:
@@ -14,7 +14,7 @@ class TestTraceAllPublicCallsMeta:
                 pass
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Ala(Supp):
             def a(self):
@@ -32,8 +32,8 @@ class TestTraceAllPublicCallsMeta:
             a.bar(1, 2, 3)
             a.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=None)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, a=1, b=2, c=3)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, a=1, b=2, c=None)'.format(a.bar.__qualname__)),
             )
 
         class Bela(Supp):
@@ -53,7 +53,7 @@ class TestDefaultTraceAbstractMeta(TestTraceAllPublicCallsMeta):
                 pass
 
             def __repr__(self):
-                return '<%s object>' % (self.__class__.__name__,)
+                return '<{} object>'.format(self.__class__.__name__,)
 
         class Ala(Supp):
             def a(self):
@@ -71,8 +71,8 @@ class TestDefaultTraceAbstractMeta(TestTraceAllPublicCallsMeta):
             a.bar(1, 2, 3)
             a.bar(1, b=2)
             l.check(
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=3)' % (self.__class__.__name__,)),
-                (__name__, 'DEBUG', 'calling %s.bar(self=<Ala object>, a=1, b=2, c=None)' % (self.__class__.__name__,)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, a=1, b=2, c=3)'.format(a.bar.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(self=<Ala object>, a=1, b=2, c=None)'.format(a.bar.__qualname__)),
             )
 
         class Bela(Supp):

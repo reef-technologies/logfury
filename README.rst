@@ -81,7 +81,7 @@ DefaultTraceMeta metaclass
     ...     def world(self):
     ...         pass
     ...     def __repr__(self):
-    ...         return '<%s object>' % (self.__class__.__name__,)
+    ...         return '<{} object>'.format(self.__class__.__name__,)
     ...
     >>> class Bar(Foo):
     ...     def baz(self, a, b, c=None):
