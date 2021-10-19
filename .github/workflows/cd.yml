@@ -25,11 +25,16 @@ jobs:
       - name: Build the distribution
         id: build
         run: nox -vs build
+      - name: Read the Changelog
+        id: read-changelog
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          version: ${{ steps.build.outputs.version }}
       - name: Create GitHub release and upload the distribution
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.build.outputs.version }}
-          body: "Release ${{ steps.build.outputs.version }}"
+          body: ${{ steps.read-changelog.outputs.changes }}
           draft: ${{ env.ACTIONS_STEP_DEBUG == 'true' }}
           prerelease: false
           files: ${{ steps.build.outputs.asset_path }}
