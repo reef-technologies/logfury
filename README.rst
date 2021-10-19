@@ -70,7 +70,7 @@ DefaultTraceMeta metaclass
     >>>
     >>>
     >>> @six.add_metaclass(DefaultTraceMeta)
-    >>> class Foo(object):
+    >>> class Foo:
     ...     def baz(self, a, b, c=None):
     ...         return True
     ...     def get_blah(self):

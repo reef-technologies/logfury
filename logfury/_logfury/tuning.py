@@ -1,4 +1,4 @@
-class limit_trace_arguments(object):
+class limit_trace_arguments:
     """
     A decorator which causes the function execution logging to omit some fields
     """
