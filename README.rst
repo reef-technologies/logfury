@@ -6,12 +6,14 @@
     :target: https://pypi.python.org/pypi/logfury/
 .. image:: https://img.shields.io/pypi/dm/logfury.svg
     :target: https://pypi.python.org/pypi/logfury/
+.. image:: https://github.com/reef-technologies/logfury/workflows/CI/badge.svg?branch=master
+    :target: https://github.com/reef-technologies/logfury/actions/workflows/ci.yml
 
 ========
 Logfury
 ========
 
-Logfury is for python library maintainers. It allows for responsible, low-boilerplate logging of method calls.
+Logfury is a tool for python library maintainers. It allows for responsible, low-boilerplate logging of method calls.
 
 *****************************
 whats with the weird import
@@ -19,11 +21,11 @@ whats with the weird import
 
 .. sourcecode:: python
 
-    from logfury.v0_1 import DefaultTraceMeta
+    from logfury.v1 import DefaultTraceMeta
 
 If you were to use logfury in your library, any change to the API could potentially break your program. Nobody wants that.
 
-Thanks to this import trick I can keep the 0.1.x API very stable. At the same time I can change the functionality of the library and change default behavior of version 0.2.x etc, without changing the name of the package. This way YOU decide when to adopt potentially incompatible API changes, by incrementing the API version on import.
+Thanks to this import trick I can keep the API very stable. At the same time I can change the functionality of the library and change default behavior of next middle version, without changing the name of the package. This way YOU decide when to adopt potentially incompatible API changes, by incrementing the API version on import. This concept is called "apiver".
 
 
 *****************
@@ -61,7 +63,7 @@ DefaultTraceMeta metaclass
     >>> import logging
     >>> import six
     >>>
-    >>> from logfury.v0_1 import DefaultTraceMeta, limit_trace_arguments, disable_trace
+    >>> from logfury.v1 import DefaultTraceMeta, limit_trace_arguments, disable_trace
     >>>
     >>>
     >>> logging.basicConfig()
@@ -70,7 +72,7 @@ DefaultTraceMeta metaclass
     >>>
     >>>
     >>> @six.add_metaclass(DefaultTraceMeta)
-    >>> class Foo(object):
+    >>> class Foo:
     ...     def baz(self, a, b, c=None):
     ...         return True
     ...     def get_blah(self):
@@ -101,9 +103,9 @@ DefaultTraceMeta metaclass
     DEBUG:__main__:calling Foo.baz(self=<Foo object>, a=1, b=2, c=3)
     >>> a.baz(4, b=8)
     DEBUG:__main__:calling Foo.baz(self=<Foo object>, a=4, b=8)
-    >>> a.get_blah()  # nothing happens, since v0_1.DefaultTraceMeta does not trace "get_.*"
-    >>> a._hello()  # nothing happens, since v0_1.DefaultTraceMeta does not trace "_.*"
-    >>> a.world()  # nothing happens, since v0_1.DefaultTraceMeta does not trace "_.*"
+    >>> a.get_blah()  # nothing happens, since v1.DefaultTraceMeta does not trace "get_.*"
+    >>> a._hello()  # nothing happens, since v1.DefaultTraceMeta does not trace "_.*"
+    >>> a.world()  # nothing happens, since v1.DefaultTraceMeta does not trace "_.*"
     >>> b = Bar()
     >>> b.baz(4, b=8)  # tracing is inherited
     DEBUG:__main__:calling Bar.baz(self=<Bar object>, a=4, b=8)

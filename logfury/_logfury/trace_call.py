@@ -5,7 +5,7 @@ import logging
 from inspect import isclass, signature
 
 
-class trace_call(object):
+class trace_call:
     """
     A decorator which causes the function execution to be logged using a passed logger
     """

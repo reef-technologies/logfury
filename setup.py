@@ -19,7 +19,7 @@ URL          = 'https://github.com/reef-technologies/logfury'
 DOWNLOAD_URL = URL + '/releases'
 
 CLASSIFIERS = [
-    'Development Status :: 4 - Beta',
+    'Development Status :: 6 - Mature',
 
     'Intended Audience :: Developers',
     'Topic :: Software Development :: Libraries :: Python Modules',
@@ -39,7 +39,6 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: Implementation :: CPython',
-    'Programming Language :: Python :: Implementation :: Jython',
     'Programming Language :: Python :: Implementation :: PyPy',
 ]
 
@@ -73,6 +72,6 @@ setup(
     classifiers      = CLASSIFIERS,
     package_data     = {NAME: ['requirements.txt', 'LICENSE']},
 
-    setup_requires=['setuptools_scm<6.0'],  # setuptools_scm>=6.0 doesn't support Python 3.5
-    use_scm_version=True,
+    setup_requires   = ['setuptools_scm<6.0'],  # setuptools_scm>=6.0 doesn't support Python 3.5
+    use_scm_version  = True,
 )  # yapf: disable
