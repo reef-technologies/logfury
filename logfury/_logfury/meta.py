@@ -1,5 +1,4 @@
 from abc import ABCMeta
-from inspect import isclass
 import logging
 
 from .trace_call import trace_call
@@ -83,15 +82,11 @@ class AbstractTraceMeta(type):
             # wrap the callable in it
             wrapped_value = wrapper(attribute_value)
 
-            if isclass(attribute_value):  # must be a class
-                # override the original __init__
-                attribute_value.__init__ = wrapped_value
-            else:  # must be a method
-                # apply the original wrapper if provided
-                if original_wrapper is not None:
-                    wrapped_value = original_wrapper(wrapped_value)
-                # substitute the trace-wrapped method for the original
-                attrs[attribute_name] = wrapped_value
+            # apply the original wrapper if provided
+            if original_wrapper is not None:
+                wrapped_value = original_wrapper(wrapped_value)
+            # substitute the trace-wrapped method for the original
+            attrs[attribute_name] = wrapped_value
 
         return super(AbstractTraceMeta, mcs).__new__(mcs, name, bases, attrs)
 

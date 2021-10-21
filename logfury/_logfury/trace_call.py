@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from functools import wraps
 
 import logging
@@ -23,20 +24,28 @@ class trace_call:
         self.only = only
         self.skip = skip
 
-    def __call__(self, function):
-        if isclass(function):
-            function = function.__init__
+    def __call__(self, callable_obj):
+        is_class = isclass(callable_obj)
+        if is_class:
+            function = callable_obj.__init__
+        else:
+            function = callable_obj
 
         @wraps(function)
         def wrapper(*wrapee_args, **wrapee_kwargs):
             if self.logger.isEnabledFor(self.LEVEL):
+                args_dict = OrderedDict()
                 sig = signature(function)
                 bound = sig.bind(*wrapee_args, **wrapee_kwargs)
+
                 for param in sig.parameters.values():
                     if param.name not in bound.arguments:
-                        bound.arguments[param.name] = param.default
+                        args_dict[param.name] = param.default
+                    else:
+                        args_dict[param.name] = bound.arguments[param.name]
 
-                args_dict = bound.arguments
+                if is_class:
+                    args_dict.popitem(last=False)  # remove "self"
 
                 # filter arguments
                 output_arg_names = []
@@ -69,9 +78,15 @@ class trace_call:
                 arguments = ', '.join('{}={}'.format(k, repr(args_dict[k])) for k in output_arg_names)
 
                 function_name = getattr(function, '__qualname__', function.__name__)
+                if is_class:
+                    function_name, *_ = function_name.rpartition('.')  # remove "__init__"
 
                 # actually log the call
                 self.logger.log(self.LEVEL, 'calling %s(%s)%s', function_name, arguments, suffix)
             return function(*wrapee_args, **wrapee_kwargs)
 
-        return wrapper
+        if is_class:
+            callable_obj.__init__ = wrapper
+            return callable_obj
+        else:
+            return wrapper
