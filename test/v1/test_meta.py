@@ -182,8 +182,8 @@ class TestTraceAllPublicCallsMeta:
             a.Bela(1, 2, 3)
             Ala.Bela(1, 2, 3)
             l.check(
-                (__name__, 'DEBUG', 'calling {}.__init__(self=<Bela object>, a=1, b=2, c=3)'.format(a.Bela.__qualname__)),
-                (__name__, 'DEBUG', 'calling {}.__init__(self=<Bela object>, a=1, b=2, c=3)'.format(Ala.Bela.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(a.Bela.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(Ala.Bela.__qualname__)),
             )
 
     def test_classmethod(self):
@@ -234,6 +234,6 @@ class TestTraceAllPublicCallsMeta:
             b.bar(1, 2, 3)
             l.check(
                 (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(ala.__qualname__)),
-                (__name__, 'DEBUG', 'calling {}.__init__(self=<Ala object>, a=1, b=2, c=3)'.format(b.Foo.__qualname__)),
+                (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(b.Foo.__qualname__)),
                 (__name__, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(b.bar.__qualname__)),
             )

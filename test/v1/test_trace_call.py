@@ -46,15 +46,15 @@ class TestTraceCall:
         with LogCapture() as l:
 
             @trace_call(logger)
-            def foo(a, b, c, d, e, *varargs_, f=None, g='G', h='H', i='ii', j='jj', **varkwargs_: None):
+            def foo(a, b, c, d, e, *varargs, f=None, g='G', h='H', i='ii', j='jj', **varkwargs):
                 pass
 
             foo('a', 'b', *['c', 'd'], e='E', f='F', Z='Z', **{'g': 'g', 'h': 'h'})
             l.check(
                 (
-                    logger_name, 'DEBUG', "calling {}(a='a', b='b', c='c', d='d', e='E', f='F', "
-                    "g='g', h='h', varkwargs_={{'Z': 'Z'}}, varargs_=<class 'inspect._empty'>, "
-                    "i='ii', j='jj')".format(foo.__qualname__)
+                    logger_name, 'DEBUG', "calling {}(a='a', b='b', c='c', d='d', e='E', "
+                    "varargs=<class 'inspect._empty'>, f='F', g='g', h='h', "
+                    "i='ii', j='jj', varkwargs={{'Z': 'Z'}})".format(foo.__qualname__)
                 ),
             )
 
@@ -63,8 +63,27 @@ class TestTraceCall:
 
             @trace_call(logger)
             class Ala:
-                def __init__(a, b, c=None):
+                def __init__(self, a, b, c=None):
                     pass
+
+                def __repr__(self):
+                    return '<{} object>'.format(self.__class__.__name__,)
+
+            Ala(1, 2, 3)
+            l.check((logger_name, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(Ala.__qualname__)),)
+
+    def test_class_that_use_self_object_attributes_in_repr(self):
+        with LogCapture() as l:
+
+            @trace_call(logger)
+            class Ala:
+                def __init__(self, a, b, c=None):
+                    self.a = a
+
+                def __repr__(self):
+                    # We use self.a here, so the self argument can not be printed in `trace_call`
+                    # wrapper as the object is not yet initialized
+                    return '<{} a={}>'.format(self.__class__.__name__, self.a)
 
             Ala(1, 2, 3)
             l.check((logger_name, 'DEBUG', 'calling {}(a=1, b=2, c=3)'.format(Ala.__qualname__)),)
