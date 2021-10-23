@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2021-10-23
+
 ### Fixed
 * Fixed decorating classes
 * Fixed arguments ordering in logs
@@ -27,5 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 * Python <3.5 support
 
-[Unreleased]: https://github.com/Backblaze/b2-sdk-python/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Backblaze/b2-sdk-python/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/Backblaze/b2-sdk-python/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Backblaze/b2-sdk-python/compare/0.1.2...v1.0.0
